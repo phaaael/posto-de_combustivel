@@ -1,0 +1,12 @@
+package com.posto.abastecimento.combustivel.dto;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+
+public record CriarCombustivelRequest(
+        @NotBlank String nome,
+        @NotNull @DecimalMin("0.01") BigDecimal precoLitro
+) {
+}
