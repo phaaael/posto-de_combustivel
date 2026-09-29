@@ -2,5 +2,11 @@ target/
 .m2/
 *.class
 *.log
+*.iml
 .idea/
 .vscode/
+logs/
+*.tmp
+*.temp
+.env
+.env.*

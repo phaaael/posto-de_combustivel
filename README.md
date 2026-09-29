@@ -2,7 +2,23 @@
 
 API REST para gerenciamento de combustiveis, bombas e abastecimentos de um posto.
 
-O projeto demonstra uma implementacao profissional com Spring Boot, mantendo o desenho simples e proporcional ao problema: separacao por dominio, DTOs como contrato HTTP, regras de negocio nos services, persistencia com JPA, schema versionado com Flyway, tratamento centralizado de erros e testes automatizados.
+## Sobre o desafio
+
+Projeto desenvolvido como solucao para o desafio tecnico de cadastro e consulta de abastecimentos. A interface escolhida para atender ao desafio foi uma API REST versionada, com persistencia em banco relacional e documentacao via Swagger.
+
+## Funcionalidades
+
+- Gerenciamento de combustiveis: criar, listar, buscar, atualizar e excluir.
+- Gerenciamento de bombas: criar, listar, buscar, atualizar e excluir.
+- Gerenciamento de abastecimentos: criar, listar, buscar, atualizar e excluir.
+- Relacionamento entre combustivel, bomba e abastecimento.
+- Calculo automatico do valor total do abastecimento.
+- Preservacao do preco aplicado no momento do abastecimento.
+- Validacoes de entrada com Bean Validation.
+- Regras de integridade para impedir exclusoes indevidas.
+- Paginacao nas listagens.
+- Filtros de abastecimentos por bomba e periodo.
+- Tratamento padronizado de erros.
 
 ## Tecnologias
 
@@ -23,15 +39,15 @@ O projeto demonstra uma implementacao profissional com Spring Boot, mantendo o d
 
 ## Arquitetura
 
-O codigo e organizado por dominio, evitando concentrar tudo em pacotes globais de controller, service e repository.
+O codigo e organizado por dominio, evitando concentrar toda a aplicacao em pacotes globais de controller, service e repository.
 
 ```text
 src/main/java/com/posto/abastecimento/
-├── abastecimento/
-├── bomba/
-├── combustivel/
-├── config/
-└── exception/
+|-- abastecimento/
+|-- bomba/
+|-- combustivel/
+|-- config/
+`-- exception/
 ```
 
 Fluxo principal:
@@ -118,11 +134,19 @@ valorTotal.setScale(2, RoundingMode.HALF_UP)
 ### Pre-requisitos
 
 - Java 21
-- Docker e Docker Compose
+- Docker
+- Docker Compose
 
 Nao e necessario ter Maven instalado globalmente. O projeto inclui Maven Wrapper.
 
-### Subir o Banco Local
+### Clonar o repositorio
+
+```bash
+git clone https://github.com/phaaael/posto-de_combustivel.git
+cd posto-de_combustivel
+```
+
+### Subir o banco local
 
 ```bash
 docker compose up -d
@@ -138,6 +162,7 @@ container port: 5432
 host port: 5433
 ```
 
+A porta `5433` foi usada no host para evitar conflito com instalacoes locais de PostgreSQL na porta `5432`.
 
 Se a porta `5433` tambem estiver ocupada, escolha outra porta no host:
 
@@ -154,7 +179,8 @@ docker compose up -d
 $env:DB_URL="jdbc:postgresql://localhost:5434/posto_abastecimento"
 .\mvnw.cmd spring-boot:run
 ```
-### Rodar a Aplicacao
+
+### Rodar a aplicacao
 
 Linux/macOS:
 
@@ -174,7 +200,9 @@ A API ficara disponivel em:
 http://localhost:8080
 ```
 
-### Variaveis de Ambiente
+A raiz `/` nao possui pagina HTML. Para testar a API, use o Swagger ou os endpoints `/api/v1`.
+
+### Variaveis de ambiente
 
 As credenciais podem ser sobrescritas por variaveis de ambiente:
 
@@ -207,9 +235,9 @@ spring.jpa.hibernate.ddl-auto=validate
 
 Assim, o Hibernate valida o schema, mas nao cria tabelas como estrategia principal. A estrutura vem das migrations.
 
-## Documentacao OpenAPI
+## Swagger
 
-Swagger UI:
+Depois de iniciar a aplicacao, acesse:
 
 ```text
 http://localhost:8080/swagger-ui.html
@@ -379,7 +407,7 @@ mvnw.cmd clean verify
 
 O projeto possui testes unitarios dos services com JUnit 5 e Mockito, alem de testes de integracao dos principais endpoints com Spring Boot, MockMvc, Flyway e H2.
 
-Cenarios cobertos incluem criacao de combustivel, duplicidade, alteracao de preco, criacao de bomba, recursos inexistentes, calculo e arredondamento de abastecimento, preservacao de preco historico, regras de exclusao e respostas `400`/`404`.
+Cenarios cobertos incluem criacao de combustivel, duplicidade, alteracao de preco, criacao de bomba, recursos inexistentes, calculo e arredondamento de abastecimento, preservacao de preco historico, regras de exclusao, validacao de litros e respostas `400`/`404`.
 
 ## Decisoes Tecnicas
 
@@ -403,6 +431,18 @@ PostgreSQL e usado na execucao normal para aproximar o ambiente local de um banc
 
 O projeto evita abstracoes genericas, interfaces sem necessidade, arquitetura hexagonal, mensageria, cache e autenticacao, porque essas escolhas nao sao necessarias para o escopo atual.
 
+## Diferenciais da Entrega
+
+- API REST versionada.
+- PostgreSQL com Docker Compose.
+- Flyway para versionamento do schema.
+- DTOs e Bean Validation.
+- Tratamento global de excecoes.
+- Paginacao e filtros de abastecimentos.
+- Historico do preco aplicado.
+- OpenAPI/Swagger.
+- Testes automatizados unitarios e de integracao.
+
 ## Estrutura de Commits
 
-O historico foi organizado em commits pequenos e relacionados, seguindo mensagens no formato solicitado pelo desafio.
+O historico foi organizado em commits pequenos e relacionados, seguindo mensagens claras para facilitar a avaliacao.
