@@ -1,4 +1,4 @@
-﻿# Sistema de Abastecimentos
+# Sistema de Abastecimentos
 
 API REST para gerenciamento de combustiveis, bombas e abastecimentos de um posto.
 
@@ -134,9 +134,26 @@ O `docker-compose.yml` cria um PostgreSQL local com:
 database: posto_abastecimento
 user: posto
 password: posto
-port: 5432
+container port: 5432
+host port: 5433
 ```
 
+
+Se a porta `5433` tambem estiver ocupada, escolha outra porta no host:
+
+```bash
+DB_PORT=5434 docker compose up -d
+DB_URL=jdbc:postgresql://localhost:5434/posto_abastecimento ./mvnw spring-boot:run
+```
+
+No Windows PowerShell:
+
+```powershell
+$env:DB_PORT="5434"
+docker compose up -d
+$env:DB_URL="jdbc:postgresql://localhost:5434/posto_abastecimento"
+.\mvnw.cmd spring-boot:run
+```
 ### Rodar a Aplicacao
 
 Linux/macOS:
@@ -162,7 +179,8 @@ http://localhost:8080
 As credenciais podem ser sobrescritas por variaveis de ambiente:
 
 ```bash
-DB_URL=jdbc:postgresql://localhost:5432/posto_abastecimento
+DB_URL=jdbc:postgresql://localhost:5433/posto_abastecimento
+DB_PORT=5433
 DB_USER=posto
 DB_PASSWORD=posto
 ```
