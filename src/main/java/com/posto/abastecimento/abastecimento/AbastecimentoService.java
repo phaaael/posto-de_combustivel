@@ -62,7 +62,7 @@ public class AbastecimentoService {
     public AbastecimentoResponse atualizar(Long id, AtualizarAbastecimentoRequest request) {
         Abastecimento abastecimento = buscarEntidade(id);
         Bomba bomba = bombaService.buscarEntidade(request.bombaId());
-        BigDecimal precoLitro = bomba.getCombustivel().getPrecoLitro();
+        BigDecimal precoLitro = abastecimento.getPrecoLitro();
         abastecimento.atualizar(bomba, request.data(), request.litros(), precoLitro, calcularValorTotal(request.litros(), precoLitro));
         return AbastecimentoResponse.from(abastecimento);
     }

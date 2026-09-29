@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.posto.abastecimento.abastecimento.dto.AtualizarAbastecimentoRequest;
 import com.posto.abastecimento.abastecimento.dto.CriarAbastecimentoRequest;
 import com.posto.abastecimento.bomba.Bomba;
 import com.posto.abastecimento.bomba.BombaService;
@@ -73,5 +74,27 @@ class AbastecimentoServiceTest {
 
         assertThat(response.precoLitro()).isEqualByComparingTo("5.79");
         assertThat(response.valorTotal()).isEqualByComparingTo("57.90");
+    }
+    @Test
+    void atualizarPreservaPrecoHistorico() {
+        Combustivel combustivel = new Combustivel("Gasolina", new BigDecimal("5.79"));
+        Bomba bomba = new Bomba("Bomba 01", combustivel);
+        Abastecimento abastecimento = new Abastecimento(
+                bomba,
+                LocalDateTime.parse("2026-09-29T10:30:00"),
+                new BigDecimal("10.00"),
+                new BigDecimal("5.79"),
+                new BigDecimal("57.90"));
+        combustivel.atualizar("Gasolina", new BigDecimal("6.09"));
+        when(abastecimentoRepository.findById(1L)).thenReturn(java.util.Optional.of(abastecimento));
+        when(bombaService.buscarEntidade(1L)).thenReturn(bomba);
+
+        var response = service.atualizar(1L, new AtualizarAbastecimentoRequest(
+                1L,
+                LocalDateTime.parse("2026-09-29T11:00:00"),
+                new BigDecimal("20.00")));
+
+        assertThat(response.precoLitro()).isEqualByComparingTo("5.79");
+        assertThat(response.valorTotal()).isEqualByComparingTo("115.80");
     }
 }

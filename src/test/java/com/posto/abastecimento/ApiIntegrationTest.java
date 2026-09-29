@@ -99,4 +99,15 @@ class ApiIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is("Bomba nao encontrada")));
     }
+    @Test
+    void abastecimentoComLitrosInvalidosRetorna400() throws Exception {
+        mockMvc.perform(post("/api/v1/abastecimentos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"bombaId":1,"data":"2026-09-29T10:30:00","litros":0}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("Dados invalidos")))
+                .andExpect(jsonPath("$.fields.litros").exists());
+    }
 }
