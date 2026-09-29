@@ -1,0 +1,239 @@
+{
+  "info": {
+    "name": "Posto de Combustivel API",
+    "description": "Colecao para validar o fluxo principal da API: combustivel, bomba, abastecimento, filtros e erros.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Criar combustivel",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 201', function () { pm.response.to.have.status(201); });",
+              "const body = pm.response.json();",
+              "pm.collectionVariables.set('combustivelId', body.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Gasolina Postman {{$timestamp}}\",\n  \"precoLitro\": 5.79\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/combustiveis",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "combustiveis"
+          ]
+        }
+      }
+    },
+    {
+      "name": "02 - Criar bomba",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 201', function () { pm.response.to.have.status(201); });",
+              "const body = pm.response.json();",
+              "pm.collectionVariables.set('bombaId', body.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Bomba Postman {{$timestamp}}\",\n  \"combustivelId\": {{combustivelId}}\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/bombas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "bombas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "03 - Registrar abastecimento",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 201', function () { pm.response.to.have.status(201); });",
+              "const body = pm.response.json();",
+              "pm.collectionVariables.set('abastecimentoId', body.id);",
+              "pm.test('valor total calculado', function () { pm.expect(Number(body.valorTotal)).to.equal(205.55); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"bombaId\": {{bombaId}},\n  \"data\": \"2026-09-29T10:30:00\",\n  \"litros\": 35.50\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/abastecimentos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "abastecimentos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "04 - Buscar abastecimento",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/abastecimentos/{{abastecimentoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "abastecimentos",
+            "{{abastecimentoId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "05 - Listar abastecimentos por bomba",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/abastecimentos?bombaId={{bombaId}}&page=0&size=20&sort=data,desc",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "abastecimentos"
+          ],
+          "query": [
+            {
+              "key": "bombaId",
+              "value": "{{bombaId}}"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "20"
+            },
+            {
+              "key": "sort",
+              "value": "data,desc"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "06 - Validar erro de litros invalidos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status 400', function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"bombaId\": {{bombaId}},\n  \"data\": \"2026-09-29T10:30:00\",\n  \"litros\": 0\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/abastecimentos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "abastecimentos"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "combustivelId",
+      "value": "1"
+    },
+    {
+      "key": "bombaId",
+      "value": "1"
+    },
+    {
+      "key": "abastecimentoId",
+      "value": "1"
+    }
+  ]
+}

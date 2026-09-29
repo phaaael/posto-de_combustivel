@@ -249,6 +249,16 @@ OpenAPI JSON:
 http://localhost:8080/v3/api-docs
 ```
 
+## Colecao Postman
+
+Para testar o fluxo principal da API com poucos cliques, importe a colecao:
+
+```text
+docs/postman_collection.json
+```
+
+A colecao usa a variavel `baseUrl` com valor padrao `http://localhost:8080` e salva automaticamente os IDs criados para reutilizar nas proximas requisicoes.
+
 ## API
 
 Todos os endpoints usam versionamento em `/api/v1`.
@@ -408,6 +418,16 @@ mvnw.cmd clean verify
 O projeto possui testes unitarios dos services com JUnit 5 e Mockito, alem de testes de integracao dos principais endpoints com Spring Boot, MockMvc, Flyway e H2.
 
 Cenarios cobertos incluem criacao de combustivel, duplicidade, alteracao de preco, criacao de bomba, recursos inexistentes, calculo e arredondamento de abastecimento, preservacao de preco historico, regras de exclusao, validacao de litros e respostas `400`/`404`.
+
+## Integracao Continua
+
+O repositorio possui workflow de CI em:
+
+```text
+.github/workflows/ci.yml
+```
+
+A pipeline executa `./mvnw clean verify` em pushes e pull requests para a branch `main`, usando Java 21 e cache de dependencias Maven.
 
 ## Decisoes Tecnicas
 
